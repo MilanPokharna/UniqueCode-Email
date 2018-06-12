@@ -65,10 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(LoginActivity.this);
         bar = (ProgressBar)findViewById(R.id.progress1);
         open();
-        // GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        //.requestIdToken(getString(R.string.default_web_client_id))
-        //.requestEmail()
-        //.build();
+        
         mAuth=FirebaseAuth.getInstance();
 
         googleButton = (Button)findViewById(R.id.googleButton);
@@ -85,8 +82,6 @@ public class LoginActivity extends AppCompatActivity {
         googleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                progressDialog.setMessage("Logging you in");
-//                progressDialog.show();
                 bar.setVisibility(View.VISIBLE);
 
                 signIn();
@@ -109,19 +104,15 @@ public class LoginActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
                 Toast.makeText(this, "Authentication Failed", Toast.LENGTH_SHORT).show();
                 googleButton.setVisibility(View.VISIBLE);
                 bar.setVisibility(View.INVISIBLE);
-                // ...
             }
         }
     }
@@ -129,7 +120,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         updateUI(currentUser);
@@ -142,8 +132,6 @@ public class LoginActivity extends AppCompatActivity {
             googleButton.setVisibility(View.INVISIBLE);
             bar.setVisibility(View.VISIBLE);
             {
-                //Toast.makeText(this, "you have already logged in", Toast.LENGTH_SHORT).show();
-
                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                     @Override
@@ -151,10 +139,8 @@ public class LoginActivity extends AppCompatActivity {
                         name = user.getDisplayName();
                         e = user.getUid().toString();
                         profile = dataSnapshot.child(e).child("profile").getValue().toString();
-                        //Toast.makeText(LoginActivity.this, "profile status:"+profile, Toast.LENGTH_SHORT).show();
-
+        
                         if (profile.equals("1")) {
-                            //Toast.makeText(LoginActivity.this, "status:"+profile, Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(LoginActivity.this, Main2Activity.class);
                             intent.putExtra("id", "def");
                             bar.setVisibility(View.INVISIBLE);
