@@ -234,7 +234,7 @@ public class LoginActivity extends AppCompatActivity {
                             updateUI(null);
                         }
 
-                        // ...
+                    
                     }
                 });
     }
